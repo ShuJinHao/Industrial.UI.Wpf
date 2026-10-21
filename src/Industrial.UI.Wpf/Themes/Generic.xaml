@@ -1,0 +1,245 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="clr-namespace:Industrial.UI.Wpf.Controls"
+                    xmlns:m="clr-namespace:Industrial.UI.Wpf.Models">
+    <!-- Override these keys in the consuming application's Resources. -->
+    <SolidColorBrush x:Key="Industrial.Surface" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="Industrial.Canvas" Color="#F5F7FA"/>
+    <SolidColorBrush x:Key="Industrial.Text" Color="#26354A"/>
+    <SolidColorBrush x:Key="Industrial.Muted" Color="#67778B"/>
+    <SolidColorBrush x:Key="Industrial.Line" Color="#E5EBF2"/>
+    <SolidColorBrush x:Key="Industrial.Accent" Color="#277CD8"/>
+    <SolidColorBrush x:Key="Industrial.Selection" Color="#E3EFFC"/>
+    <SolidColorBrush x:Key="Industrial.Normal" Color="#17865A"/>
+    <SolidColorBrush x:Key="Industrial.NormalSoft" Color="#E1F4E9"/>
+    <SolidColorBrush x:Key="Industrial.Running" Color="#277CD8"/>
+    <SolidColorBrush x:Key="Industrial.RunningSoft" Color="#E3EFFC"/>
+    <SolidColorBrush x:Key="Industrial.Waiting" Color="#826318"/>
+    <SolidColorBrush x:Key="Industrial.WaitingSoft" Color="#FBF1D8"/>
+    <SolidColorBrush x:Key="Industrial.Warning" Color="#A45B10"/>
+    <SolidColorBrush x:Key="Industrial.WarningSoft" Color="#FFF0DD"/>
+    <SolidColorBrush x:Key="Industrial.Alarm" Color="#BA2858"/>
+    <SolidColorBrush x:Key="Industrial.AlarmSoft" Color="#FBE4EC"/>
+    <SolidColorBrush x:Key="Industrial.Offline" Color="#67778B"/>
+    <SolidColorBrush x:Key="Industrial.OfflineSoft" Color="#EBEEF2"/>
+    <ui:StatusTextConverter x:Key="Industrial.StatusText"/>
+
+    <Style TargetType="{x:Type ui:StatusBadge}">
+        <Setter Property="Foreground" Value="{DynamicResource Industrial.Offline}"/>
+        <Setter Property="Background" Value="{DynamicResource Industrial.OfflineSoft}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ui:StatusBadge}">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="9" Padding="7,3">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="5" Height="5" Fill="{TemplateBinding Foreground}" Margin="0,0,5,0"/>
+                            <TextBlock Foreground="{TemplateBinding Foreground}" FontSize="{TemplateBinding FontSize}"
+                                       Text="{Binding Status, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Industrial.StatusText}}"/>
+                        </StackPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Status" Value="Normal"><Setter Property="Foreground" Value="{DynamicResource Industrial.Normal}"/><Setter Property="Background" Value="{DynamicResource Industrial.NormalSoft}"/></Trigger>
+            <Trigger Property="Status" Value="Running"><Setter Property="Foreground" Value="{DynamicResource Industrial.Running}"/><Setter Property="Background" Value="{DynamicResource Industrial.RunningSoft}"/></Trigger>
+            <Trigger Property="Status" Value="Waiting"><Setter Property="Foreground" Value="{DynamicResource Industrial.Waiting}"/><Setter Property="Background" Value="{DynamicResource Industrial.WaitingSoft}"/></Trigger>
+            <Trigger Property="Status" Value="Warning"><Setter Property="Foreground" Value="{DynamicResource Industrial.Warning}"/><Setter Property="Background" Value="{DynamicResource Industrial.WarningSoft}"/></Trigger>
+            <Trigger Property="Status" Value="Alarm"><Setter Property="Foreground" Value="{DynamicResource Industrial.Alarm}"/><Setter Property="Background" Value="{DynamicResource Industrial.AlarmSoft}"/></Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <DataTemplate x:Key="Industrial.MeasurementTemplate" DataType="{x:Type m:MeasurementItem}">
+        <Border x:Name="MetricBorder" Background="#80FFFFFF" CornerRadius="5" Padding="8,6" Margin="0,3">
+            <Grid>
+                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                <TextBlock Text="{Binding Label}" Foreground="{DynamicResource Industrial.Muted}" FontSize="10" TextWrapping="Wrap"/>
+                <DockPanel Grid.Row="1" Margin="0,3,0,0" LastChildFill="True">
+                    <TextBlock Text="{Binding Unit}" DockPanel.Dock="Right" Margin="5,0,0,0" FontSize="10" VerticalAlignment="Bottom" Foreground="{DynamicResource Industrial.Muted}"/>
+                    <TextBlock x:Name="ValueText" Text="{Binding DisplayValue}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource Industrial.Text}" TextTrimming="CharacterEllipsis" ToolTip="{Binding DisplayValue}"/>
+                </DockPanel>
+            </Grid>
+        </Border>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding Status}" Value="{x:Static m:DeviceStatus.Warning}"><Setter TargetName="ValueText" Property="Foreground" Value="{DynamicResource Industrial.Warning}"/><Setter TargetName="MetricBorder" Property="ToolTip" Value="预警"/></DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="{x:Static m:DeviceStatus.Alarm}"><Setter TargetName="ValueText" Property="Foreground" Value="{DynamicResource Industrial.Alarm}"/><Setter TargetName="MetricBorder" Property="ToolTip" Value="报警"/></DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <Style TargetType="{x:Type ui:DeviceCard}">
+        <Setter Property="Foreground" Value="{DynamicResource Industrial.Text}"/>
+        <Setter Property="Background" Value="{DynamicResource Industrial.OfflineSoft}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Industrial.Line}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="FontFamily" Value="Microsoft YaHei UI"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="MetricTemplate" Value="{StaticResource Industrial.MeasurementTemplate}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ui:DeviceCard}">
+                    <Grid>
+                        <Grid.RowDefinitions><RowDefinition x:Name="CapRow" Height="0"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                        <Border x:Name="BatteryCap" Width="46" Background="{TemplateBinding Background}" CornerRadius="4,4,0,0" Visibility="Collapsed"/>
+                        <Border Grid.Row="1" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <StackPanel>
+                                <TextBlock Text="{TemplateBinding Title}" FontSize="14" FontWeight="SemiBold" Foreground="{TemplateBinding Foreground}" TextTrimming="CharacterEllipsis" ToolTip="{TemplateBinding Title}"/>
+                                <TextBlock x:Name="SubtitleText" Text="{TemplateBinding Subtitle}" FontSize="10" Foreground="{DynamicResource Industrial.Muted}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                <ui:StatusBadge Status="{TemplateBinding Status}" HorizontalAlignment="Left" Margin="0,8,0,5"/>
+                                <ItemsControl ItemsSource="{TemplateBinding MetricsSource}" ItemTemplate="{TemplateBinding MetricTemplate}"/>
+                                <Button x:Name="DetailButton" Content="{TemplateBinding DetailText}" Command="{TemplateBinding DetailCommand}"
+                                        CommandParameter="{TemplateBinding DetailCommandParameter}" Foreground="{DynamicResource Industrial.Accent}"
+                                        Margin="0,8,0,0" Padding="7,4" HorizontalAlignment="Stretch" Cursor="Hand"
+                                        Background="Transparent" BorderBrush="{DynamicResource Industrial.Line}"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Shape" Value="Battery"><Setter TargetName="CapRow" Property="Height" Value="8"/><Setter TargetName="BatteryCap" Property="Visibility" Value="Visible"/></Trigger>
+                        <Trigger Property="Subtitle" Value=""><Setter TargetName="SubtitleText" Property="Visibility" Value="Collapsed"/></Trigger>
+                        <Trigger Property="Subtitle" Value="{x:Null}"><Setter TargetName="SubtitleText" Property="Visibility" Value="Collapsed"/></Trigger>
+                        <Trigger Property="DetailCommand" Value="{x:Null}"><Setter TargetName="DetailButton" Property="Visibility" Value="Collapsed"/></Trigger>
+                        <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.55"/></Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Status" Value="Normal"><Setter Property="Background" Value="{DynamicResource Industrial.NormalSoft}"/></Trigger>
+            <Trigger Property="Status" Value="Running"><Setter Property="Background" Value="{DynamicResource Industrial.RunningSoft}"/></Trigger>
+            <Trigger Property="Status" Value="Waiting"><Setter Property="Background" Value="{DynamicResource Industrial.WaitingSoft}"/></Trigger>
+            <Trigger Property="Status" Value="Warning"><Setter Property="Background" Value="{DynamicResource Industrial.WarningSoft}"/></Trigger>
+            <Trigger Property="Status" Value="Alarm"><Setter Property="Background" Value="{DynamicResource Industrial.AlarmSoft}"/></Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <DataTemplate x:Key="Industrial.DeviceTemplate" DataType="{x:Type m:DeviceItem}">
+        <ui:DeviceCard Title="{Binding Title}" Subtitle="{Binding Subtitle}" Status="{Binding Status}" MetricsSource="{Binding Measurements}"
+                       Shape="{Binding CardShape, RelativeSource={RelativeSource AncestorType={x:Type ui:DeviceGrid}}}"
+                       DetailCommand="{Binding DetailCommand, RelativeSource={RelativeSource AncestorType={x:Type ui:DeviceGrid}}}"
+                       DetailCommandParameter="{Binding}"/>
+    </DataTemplate>
+
+    <Style TargetType="{x:Type ui:DeviceGrid}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="ItemTemplate" Value="{StaticResource Industrial.DeviceTemplate}"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
+        <Setter Property="ItemsPanel"><Setter.Value><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></Setter.Value></Setter>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Width" Value="{Binding CardWidth, RelativeSource={RelativeSource AncestorType={x:Type ui:DeviceGrid}}}"/>
+                    <Setter Property="Margin" Value="5"/>
+                    <Setter Property="Padding" Value="2"/>
+                    <Setter Property="VerticalAlignment" Value="Top"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <Border x:Name="Frame" CornerRadius="11" BorderThickness="2" BorderBrush="Transparent" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Stretch"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Frame" Property="BorderBrush" Value="{DynamicResource Industrial.Line}"/></Trigger>
+                                    <Trigger Property="IsSelected" Value="True"><Setter TargetName="Frame" Property="BorderBrush" Value="{DynamicResource Industrial.Accent}"/></Trigger>
+                                    <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="Frame" Property="BorderBrush" Value="{DynamicResource Industrial.Accent}"/></Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ui:DeviceGrid}">
+                    <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <ScrollViewer Focusable="False" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                      VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" CanContentScroll="False">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <DataTemplate x:Key="Industrial.GroupTemplate" DataType="{x:Type m:EquipmentGroup}">
+        <Grid Margin="2,3">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+            <StackPanel Margin="0,0,8,0">
+                <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource Industrial.Text}" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding Subtitle}" Foreground="{DynamicResource Industrial.Muted}" FontSize="11" Margin="0,5,0,0" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding Items.Count, StringFormat='数据对象：{0}'}" Foreground="{DynamicResource Industrial.Muted}" FontSize="10" Margin="0,4,0,0"/>
+            </StackPanel>
+            <ui:StatusBadge Grid.Column="1" Status="{Binding Status}" VerticalAlignment="Top"/>
+        </Grid>
+    </DataTemplate>
+
+    <Style x:Key="Industrial.GroupContainer" TargetType="ListBoxItem">
+        <Setter Property="Padding" Value="12"/>
+        <Setter Property="Margin" Value="0,0,0,6"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Template"><Setter.Value>
+            <ControlTemplate TargetType="ListBoxItem">
+                <Border x:Name="GroupFrame" Background="Transparent" CornerRadius="7" BorderBrush="Transparent" BorderThickness="1" Padding="{TemplateBinding Padding}">
+                    <ContentPresenter HorizontalAlignment="Stretch"/>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="GroupFrame" Property="Background" Value="{DynamicResource Industrial.Canvas}"/></Trigger>
+                    <Trigger Property="IsSelected" Value="True"><Setter TargetName="GroupFrame" Property="Background" Value="{DynamicResource Industrial.Selection}"/><Setter TargetName="GroupFrame" Property="BorderBrush" Value="{DynamicResource Industrial.Accent}"/></Trigger>
+                    <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="GroupFrame" Property="BorderBrush" Value="{DynamicResource Industrial.Accent}"/></Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Setter.Value></Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ui:DeviceBoard}">
+        <Setter Property="FontFamily" Value="Microsoft YaHei UI"/>
+        <Setter Property="Background" Value="{DynamicResource Industrial.Canvas}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Industrial.Text}"/>
+        <Setter Property="GroupItemTemplate" Value="{StaticResource Industrial.GroupTemplate}"/>
+        <Setter Property="DeviceItemTemplate" Value="{StaticResource Industrial.DeviceTemplate}"/>
+        <Setter Property="Template"><Setter.Value>
+            <ControlTemplate TargetType="{x:Type ui:DeviceBoard}">
+                <Grid Background="{TemplateBinding Background}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/><ColumnDefinition Width="8"/><ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Width="{TemplateBinding ListWidth}" Background="{DynamicResource Industrial.Surface}" CornerRadius="10" BorderBrush="{DynamicResource Industrial.Line}" BorderThickness="1" Padding="10">
+                        <Grid>
+                            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                            <TextBlock Text="{TemplateBinding ListHeader}" FontWeight="SemiBold" FontSize="15" Margin="4,5,4,16" Foreground="{TemplateBinding Foreground}"/>
+                            <ListBox x:Name="PART_Groups" Grid.Row="1" ItemsSource="{TemplateBinding GroupsSource}"
+                                     SelectedItem="{Binding SelectedGroup, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                     ItemTemplate="{TemplateBinding GroupItemTemplate}" ItemContainerStyle="{StaticResource Industrial.GroupContainer}"
+                                     Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+                            <TextBlock x:Name="EmptyGroups" Grid.Row="1" Text="{TemplateBinding EmptyGroupsText}" Foreground="{DynamicResource Industrial.Muted}" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Column="2" Background="{DynamicResource Industrial.Surface}" CornerRadius="10" BorderBrush="{DynamicResource Industrial.Line}" BorderThickness="1" Padding="10">
+                        <Grid>
+                            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                            <TextBlock Text="{TemplateBinding CardsHeader}" FontWeight="SemiBold" FontSize="15" Margin="6,5,6,12" Foreground="{TemplateBinding Foreground}"/>
+                            <ui:DeviceGrid x:Name="PART_Devices" Grid.Row="1" ItemsSource="{TemplateBinding DevicesSource}"
+                                           SelectedItem="{Binding SelectedDevice, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                           ItemTemplate="{TemplateBinding DeviceItemTemplate}" CardWidth="{TemplateBinding CardWidth}"
+                                           CardShape="{TemplateBinding CardShape}" DetailCommand="{TemplateBinding DetailCommand}"/>
+                            <TextBlock x:Name="EmptyDevices" Grid.Row="1" Text="{TemplateBinding EmptyDevicesText}" TextWrapping="Wrap" Margin="20" Foreground="{DynamicResource Industrial.Muted}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <Trigger SourceName="PART_Groups" Property="HasItems" Value="False"><Setter TargetName="EmptyGroups" Property="Visibility" Value="Visible"/></Trigger>
+                    <Trigger SourceName="PART_Devices" Property="HasItems" Value="False"><Setter TargetName="EmptyDevices" Property="Visibility" Value="Visible"/></Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Setter.Value></Setter>
+    </Style>
+</ResourceDictionary>

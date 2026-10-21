@@ -1,0 +1,20 @@
+{
+  "checks": [
+    "XML well-formedness: 7 files",
+    "All three projects target .NET Framework 4.8",
+    "Project inputs and project references exist; source files explicitly included",
+    "No PackageReference or binary HintPath dependencies",
+    "Library has no original global state, PLC access, polling timer or original ViewModel dependency",
+    "All 24 referenced theme resource keys are defined",
+    "XAML class/code-behind pairing present",
+    "Seven explicit display statuses present"
+  ],
+  "errors": [],
+  "not_executed": [
+    "C# compilation",
+    "WPF BAML compilation",
+    "Windows smoke checks",
+    "Visual inspection of rendered WPF",
+    "NuGet packing"
+  ]
+}

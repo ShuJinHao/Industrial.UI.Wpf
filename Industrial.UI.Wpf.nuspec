@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>Industrial.UI.Wpf</id>
+    <version>0.1.0</version>
+    <authors>Internal</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Reusable equipment list, device cards and measurement templates for WPF .NET Framework 4.8. Internal distribution package; no external runtime package dependencies.</description>
+    <tags>WPF net48 industrial equipment controls</tags>
+  </metadata>
+  <files>
+    <file src="src\Industrial.UI.Wpf\bin\Release\Industrial.UI.Wpf.dll" target="lib\net48"/>
+  </files>
+</package>

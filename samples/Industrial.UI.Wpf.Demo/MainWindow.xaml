@@ -1,0 +1,53 @@
+<Window x:Class="Industrial.UI.Wpf.Demo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="clr-namespace:Industrial.UI.Wpf.Controls;assembly=Industrial.UI.Wpf"
+        Title="工业设备 UI 控件示例 · .NET Framework 4.8" Width="1240" Height="840" MinWidth="850" MinHeight="600"
+        Background="#F5F7FA" FontFamily="Microsoft YaHei UI" WindowStartupLocation="CenterScreen">
+    <Grid Margin="24">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <DockPanel Margin="0,0,0,16">
+            <Border DockPanel.Dock="Right" Background="#FFF0DD" CornerRadius="12" Padding="12,6" VerticalAlignment="Center">
+                <TextBlock Text="演示数据 · 未连接现场设备" Foreground="#A45B10"/>
+            </Border>
+            <StackPanel>
+                <TextBlock Text="设备与数据，一目了然" FontSize="26" FontWeight="SemiBold" Foreground="#26354A"/>
+                <TextBlock Text="列表选择 / 卡片展示 / 自定义数据项 / 独立详情命令" Margin="0,7,0,0" Foreground="#67778B"/>
+            </StackPanel>
+        </DockPanel>
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="12" Margin="0,0,0,14">
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Content="{Binding SimulationButtonText}" Command="{Binding ToggleSimulationCommand}" Padding="12,6"/>
+                <WrapPanel VerticalAlignment="Center">
+                    <ui:StatusBadge Status="Normal" Margin="0,0,8,0"/>
+                    <ui:StatusBadge Status="Running" Margin="0,0,8,0"/>
+                    <ui:StatusBadge Status="Waiting" Margin="0,0,8,0"/>
+                    <ui:StatusBadge Status="Warning" Margin="0,0,8,0"/>
+                    <ui:StatusBadge Status="Alarm" Margin="0,0,8,0"/>
+                    <ui:StatusBadge Status="Offline" Margin="0,0,8,0"/>
+                    <ui:StatusBadge Status="Unknown"/>
+                </WrapPanel>
+            </DockPanel>
+        </Border>
+        <TabControl Grid.Row="2" BorderThickness="0" Background="Transparent" Padding="0,12,0,0">
+            <TabItem Header="  托盘 / 电芯  ">
+                <ui:DeviceBoard GroupsSource="{Binding Trays}" SelectedGroup="{Binding SelectedTray}"
+                                DevicesSource="{Binding SelectedTray.Items}" SelectedDevice="{Binding SelectedCell}"
+                                ListHeader="托盘列表" CardsHeader="电芯实时数据" CardShape="Battery"
+                                DetailCommand="{Binding DetailCommand}" CardWidth="152" ListWidth="275"/>
+            </TabItem>
+            <TabItem Header="  机柜 / 传感器  ">
+                <ui:DeviceBoard GroupsSource="{Binding Cabinets}" SelectedGroup="{Binding SelectedCabinet}"
+                                DevicesSource="{Binding SelectedCabinet.Items}" SelectedDevice="{Binding SelectedSensor}"
+                                ListHeader="设备机柜" CardsHeader="传感器数据" CardShape="Panel"
+                                DetailCommand="{Binding DetailCommand}" CardWidth="184" ListWidth="275"/>
+            </TabItem>
+        </TabControl>
+        <Border Grid.Row="3" Background="#E3EFFC" CornerRadius="6" Padding="12,8" Margin="0,14,0,0">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Right" Text="{Binding LastRefresh}" Foreground="#67778B" Margin="12,0,0,0"/>
+                <TextBlock Text="{Binding LastAction}" Foreground="#277CD8" TextTrimming="CharacterEllipsis"/>
+            </DockPanel>
+        </Border>
+    </Grid>
+</Window>
